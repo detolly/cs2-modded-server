@@ -34,14 +34,14 @@ ENV HOME="/home/steam/cs2/"
 RUN mkdir -p $HOME && \
     chown -R steam:steam $HOME
 
-ENV SRC_DIR="/home/cs2-modded-server"
+ENV SRC_DIR="/cs2-modded-server"
+ENV MODS_DIR="/mods"
 
 WORKDIR $SRC_DIR
 
-COPY custom_files $SRC_DIR/custom_files
 COPY install_docker.sh $SRC_DIR/
-COPY game/csgo $SRC_DIR/game/csgo
+COPY game $MODS_DIR/game
 
 USER steam
 
-CMD [ "sudo", "-E", "bash", "/home/cs2-modded-server/install_docker.sh" ]
+CMD [ "sudo", "-E", "bash", "/cs2-modded-server/install_docker.sh" ]
