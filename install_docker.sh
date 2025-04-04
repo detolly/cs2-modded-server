@@ -34,32 +34,6 @@ else
     IP_ARGS="-ip ${IP}"
 fi
 
-if [ -f /etc/os-release ]; then
-    # freedesktop.org and systemd
-    . /etc/os-release
-    DISTRO_OS=$NAME
-    DISTRO_VERSION=$VERSION_ID
-elif type lsb_release >/dev/null 2>&1; then
-    # linuxbase.org
-    DISTRO_OS=$(lsb_release -si)
-    DISTRO_VERSION=$(lsb_release -sr)
-elif [ -f /etc/lsb-release ]; then
-    # For some versions of Debian/Ubuntu without lsb_release command
-    . /etc/lsb-release
-    DISTRO_OS=$DISTRIB_ID
-    DISTRO_VERSION=$DISTRIB_RELEASE
-elif [ -f /etc/debian_version ]; then
-    # Older Debian/Ubuntu/etc.
-    DISTRO_OS=Debian
-    DISTRO_VERSION=$(cat /etc/debian_version)
-else
-    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-    DISTRO_OS=$(uname -s)
-    DISTRO_VERSION=$(uname -r)
-fi
-
-echo "Starting on $DISTRO_OS: $DISTRO_VERSION..."
-
 # Get the free space on the root filesystem in GB
 FREE_SPACE=$(df / --output=avail -BG | tail -n 1 | tr -d 'G')
 
@@ -83,23 +57,7 @@ if [ ! -z "$DUCK_TOKEN" ]; then
     echo url="http://www.duckdns.org/update?domains=$DUCK_DOMAIN&token=$DUCK_TOKEN&ip=$PUBLIC_IP" | curl -k -o /duck.log -K -
 fi
 
-echo "Checking $user user exists..."
-getent passwd ${user} 2 >/dev/null &>1
-if [ "$?" -ne "0" ]; then
-    echo "Adding $user user..."
-    addgroup ${user} &&
-        adduser --system --home /home/${user} --shell /bin/false --ingroup ${user} ${user} &&
-        usermod -a -G tty ${user} &&
-        mkdir -m 777 /home/${user}/cs2 &&
-        chown -R ${user}:${user} /home/${user}/cs2
-    if [ "$?" -ne "0" ]; then
-        echo "ERROR: Cannot add user $user..."
-        exit 1
-    fi
-fi
-
-chmod 777 /home/${user}/cs2
-chown -R ${user}:${user} /home/${user}
+chown ${user}:${user} /home/${user}
 
 echo "Checking steamcmd exists..."
 if [ ! -d "/steamcmd" ]; then
@@ -120,7 +78,7 @@ sudo -u $user /steamcmd/steamcmd.sh \
     +api_logging 1 1 \
     +@sSteamCmdForcePlatformType linux \
     +@sSteamCmdForcePlatformBitness "$BITS" \
-    +force_install_dir /home/${user}/cs2 \
+    +force_install_dir /cs2 \
     +login anonymous \
     +app_update 730 \
     +quit
@@ -137,18 +95,8 @@ ln -sf /steamcmd/linux32/steamclient.so /home/${user}/.steam/sdk32/
 mkdir -p /home/${user}/.steam/sdk64/
 ln -sf /steamcmd/linux64/steamclient.so /home/${user}/.steam/sdk64/
 
-echo "Installing mods"
-cp -R /home/cs2-modded-server/game/csgo/ /home/${user}/cs2/game/
-
-echo "Merging in custom files"
-cp -RT /home/custom_files/ /home/${user}/cs2/game/csgo/
-
-chown -R ${user}:${user} /home/${user}
-
-cd /home/${user}/cs2 || exit
-
 # Define the file name
-FILE="game/csgo/gameinfo.gi"
+FILE="/cs2/game/csgo/gameinfo.gi"
 
 # Define the pattern to search for and the line to add
 PATTERN="Game_LowViolence[[:space:]]*csgo_lv // Perfect World content override"
@@ -171,9 +119,20 @@ else
     echo "$FILE successfully patched for Metamod."
 fi
 
+echo "Merging custom files & mods"
+DIR1=/custom_files
+DIR2=/mods
+DIR3=/cs2
+DST_DIR=/home/${user}/cs2/
+mount -t overlay overlay -o lowerdir=$DIR1:$DIR2:$DIR3 $DST_DIR
+
+chown -R ${user}:${user} /home/${user}
+
+cd /home/${user}/cs2 || exit
+
 echo "Starting server on $PUBLIC_IP:$PORT"
 # https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers#Command-Line_Parameters
-sudo -u $user ./game/bin/linuxsteamrt64/cs2 \
+sudo -u $user /home/$user/cs2/game/bin/linuxsteamrt64/cs2 \
     -dedicated \
     -console \
     -usercon \
