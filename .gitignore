@@ -1,8 +1,6 @@
-/tools/
-/server/
-/steamcmd/
-.env copy
-/custom_files/*
-cs2
-tmp
-.env
+env.sh
+
+custom_files/
+run/
+cs2/
+upper/
