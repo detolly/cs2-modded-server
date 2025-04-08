@@ -8,6 +8,12 @@ else
     IP_ARGS="-ip ${IP}"
 fi
 
+mkdir -p $PWD/config
+mkdir -p $PWD/cs2
+mkdir -p $PWD/run
+mkdir -p $PWD/.work
+mkdir -p $PWD/upper
+
 # https://developer.valvesoftware.com/wiki/Command_line_options
 steamcmd \
     +api_logging 1 1 \
@@ -42,19 +48,15 @@ else
     echo "$FILE successfully patched for Metamod."
 fi
 
-mkdir -p run
-
 echo "Merging custom files & mods"
 
 UPPER=$PWD/upper
-DIR1=$PWD/custom_files
+DIR1=$PWD/config
 DIR2=$PWD/mods
 DIR3=$PWD/cs2
 DST_DIR=$PWD/run
 sudo mount -t overlay overlay -o lowerdir=$DIR1:$DIR2:$DIR3,upperdir=$UPPER,workdir=$PWD/.work $DST_DIR
 trap 'sudo umount $DST_DIR' EXIT
-
-exit
 
 # https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers#Command-Line_Parameters
 sudo -u $USER ./run/game/bin/linuxsteamrt64/cs2 \
