@@ -1,6 +1,6 @@
 env.sh
 
-custom_files/
+config/
 run/
 cs2/
 upper/
