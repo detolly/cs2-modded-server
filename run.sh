@@ -56,7 +56,7 @@ DIR2=$PWD/mods
 DIR3=$PWD/cs2
 DST_DIR=$PWD/run
 sudo mount -t overlay overlay -o lowerdir=$DIR1:$DIR2:$DIR3,upperdir=$UPPER,workdir=$PWD/.work $DST_DIR
-trap 'sudo umount $DST_DIR' EXIT
+trap 'sleep 1 && sudo umount $DST_DIR' EXIT
 
 # https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers#Command-Line_Parameters
 sudo -u $USER ./run/game/bin/linuxsteamrt64/cs2 \
