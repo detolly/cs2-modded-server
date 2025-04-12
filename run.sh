@@ -59,7 +59,7 @@ sudo mount -t overlay overlay -o lowerdir=$DIR1:$DIR2:$DIR3,upperdir=$UPPER,work
 trap 'sleep 1 && sudo umount $DST_DIR' EXIT
 
 # https://developer.valvesoftware.com/wiki/Counter-Strike_2/Dedicated_Servers#Command-Line_Parameters
-sudo -u $USER ./run/game/bin/linuxsteamrt64/cs2 \
+./run/game/bin/linuxsteamrt64/cs2 \
     -dedicated \
     -console \
     -usercon \
