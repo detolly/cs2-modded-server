@@ -90,11 +90,12 @@ Mod | Version | Why
 [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp) | `1.0.316` | Attempts to implement a .NET Core scripting layer on top of a Metamod Source Plugin, allowing developers to create plugins that interact with the game server in a modern language (C#)
 [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager) | `1.3.5` | Allows you to use multiple workshop addons at once and have clients download them
 [ServerListPlayersFix](https://github.com/Source2ZE/ServerListPlayersFix) | `1.0.1-Rebuild-04102024` | Fixes players not showing up in the server browser
-[MovementUnlocker](https://github.com/Source2ZE/MovementUnlocker)| `1.4` | Removes max speed limitation from players on the ground, feels like CS:S
-[CS2Fixes-RampbugFix](https://github.com/Interesting-exe/CS2Fixes-RampbugFix)| `2024-11-06` | Minimizes rampbugs (needs to be enabled via `!settings`)
+[MovementUnlocker](https://github.com/Source2ZE/MovementUnlocker)| `1.4` | Removes max speed limitation from players on the ground, feels like CS:S [How?](#i-run-a-surfkzbhop-server-and-want-movementunlocker-and-cs2fixes-rampbugfix-permanently-on)
+[CS2Fixes-RampbugFix](https://github.com/Interesting-exe/CS2Fixes-RampbugFix)| `2024-11-06` | Minimizes rampbugs (needs to be enabled via `!settings` [How?](#i-run-a-surfkzbhop-server-and-want-movementunlocker-and-cs2fixes-rampbugfix-permanently-on))
 [CS2_ExecAfter](https://github.com/kus/CS2_ExecAfter) | `1.0.0` | Executes a command after server event (i.e. OnMapStart) or a delay.
 [CS2 Remove Map Weapons](https://github.com/kus/CS2-Remove-Map-Weapons) | `1.0.1` | Remove weapons from the map in CS2 as `mp_weapons_allow_map_placed 0` does not work.
-[GameModeManager](https://github.com/nickj609/GameModeManager)| `1.0.58` | A simple Counter-Strike 2 server plugin that helps admins manage game modes and map groups.
+[GameModeManager](https://github.com/nickj609/GameModeManager)| `1.0.59` | A simple Counter-Strike 2 server plugin that helps admins manage game modes and map groups.
+[cs2-inventory-simulator](https://github.com/ianlucas/cs2-inventory-simulator-plugin)| `19` | Use any Weapon, Knife, Gloves, Agent, Music Kit, Pin or Graffiti. [How?](#skin-changer)
 [MatchZy](https://github.com/shobhit-pathak/MatchZy) | `0.8.9` | MatchZy is a plugin for CS2 for running and managing practice/pugs/scrims/matches with easy configuration!
 [MapConfigurator](https://github.com/ManifestManah/MapConfigurator)| `1.0.2` | Allows you to quick and easily create unique configuration files for each map on your server.
 [K4-DamageInfo](https://github.com/KitsuneLab-Development/K4-DamageInfo) | `2.4.0` | Displays the amount of damage players have inflicted on the victim's HP and Armor, as well as the hit groups they have hit.
@@ -118,7 +119,7 @@ Mod | Version | Why
 [AnnouncementBroadcaster](https://github.com/lengran/CS2AnnouncementBroadcaster) | `0.5` | Conditional messages, OnCommand, OnPlayerConnect, OnRoundStart, and TimerMsgs.
 [CS2-GameModifiers](https://github.com/Lewisscrivens/CS2-GameModifiers-Plugin) | `1.0.3` | CS2, but every round is a SURPRISE. Inspiration from [NadeKings video](https://www.youtube.com/watch?v=OQQBUFB56Iw).
 [CS2FunMatchPlugin](https://github.com/TitaniumLithium/CS2FunMatchPlugin) | `1.1.1` | Random fun mode every round
-[RollTheDice](https://github.com/Kandru/cs2-roll-the-dice) | `1.3.13` | Roll the dice to get either a positive or negative effect for the current round.
+[RollTheDice](https://github.com/Kandru/cs2-roll-the-dice) | `1.3.15` | Roll the dice to get either a positive or negative effect for the current round.
 [CS2-FixRandomSpawn](https://github.com/qstage/CS2-FixRandomSpawn) | `1.1.4` | Fixes ConVar `mp_randomspawn` for any game mode.
 [CS2-MutualScoringPlayers](https://github.com/qstage/CS2-MutualScoringPlayers) | `1.0.1` | Keeps score of kills between players.
 [CS2WarcraftMod](https://github.com/Wngui/CS2WarcraftMod) | `3.2.2` | An open-source Warcraft mod for CS2 featuring a fully-fledged RPG system.
@@ -766,6 +767,47 @@ First open terminal and `cd` into the folder where you unzipped the zips i.e.: `
 `rsync -rhavz --exclude "._*" --exclude ".DS_Store" --partial --progress --stats ./addons/ /Users/kus/dev/personal/counter-strike/cs2-modded-server/game/csgo/addons/`
 
 If you are on Windows, from the [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp/releases) with runtime zip, you need to copy the `api`,`bin`, `dotnet` folders from the `/addons/counterstrikesharp` folder to `/game/csgo/addons/windows/counterstrikesharp` in this repo.
+
+### Skin changer
+
+On your server your players will have the ability to change the following:
+
+- Weapon
+  - Paint Kit, Wear, Seed, Name tag, StatTrak (with increment), and Stickers.
+- Knife
+  - Paint Kit, Wear, Seed, Name tag, and StatTrak (with increment).
+- Gloves
+  - Paint Kit, Wear, Seed.
+- Agent
+  - Patches.
+- Music Kit
+  - StatTrak (with increment). 
+- Pin
+- Graffiti
+
+Go to [https://inventory.cstrike.app](https://inventory.cstrike.app/) and click `Sign-in to sync` and log in with Steam (this needs to be the same Steam account you are playing on).
+
+Click `Craft Item` and create the items you want. You need to right click them and "Equip" them like you do in-game.
+
+On the server type `!ws` and it should update your skins to what you have set.
+
+> [!CAUTION]  
+> Your server can be banned by Valve for using this plugin (see their [server guidelines](https://blog.counter-strike.net/index.php/server_guidelines)). Use at your own risk.
+
+If you **DO NOT** want to use this plugin; change `FollowCS2ServerGuidelines` to `true` in `addons/counterstrikesharp/configs/core.json`. It is recommended to do this via [custom files](#custom-files).
+
+### I run a Surf/KZ/Bhop server and want [MovementUnlocker](https://github.com/Source2ZE/MovementUnlocker) and [CS2Fixes-RampbugFix](https://github.com/Interesting-exe/CS2Fixes-RampbugFix) permanently on
+
+Based on your OS; copy:
+
+`game/csgo/addons/surf/<linux|windows>/addons/metamod/cs2fixes-rampbugfix.vdf` to `/custom_files/addons/metamod/cs2fixes-rampbugfix.vdf`
+`game/csgo/addons/surf/<linux|windows>/addons/metamod/MovementUnlocker.vdf` to `/custom_files/addons/metamod/MovementUnlocker.vdf`
+
+This will enable [MovementUnlocker](https://github.com/Source2ZE/MovementUnlocker) and [CS2Fixes-RampbugFix](https://github.com/Interesting-exe/CS2Fixes-RampbugFix) on your server when it boots.
+
+To check type `meta list` in console and you should see `Movement Unlocker` and `Rampbugfix` in the list of loaded plugins.
+
+If you only want to turn it on ad hoc then in chat use the command `!settings` > `Enable` > `Surf` and it will load them and change the map to de_dust to avoid the server crashing, then change the map back to what you want with `!maps`.
 
 ### Enable K4 Arenas
 
